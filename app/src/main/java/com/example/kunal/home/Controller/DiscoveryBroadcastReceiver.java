@@ -15,7 +15,7 @@ public class DiscoveryBroadcastReceiver extends BroadcastReceiver{
 
     protected String deviceAddress;
     protected String deviceName;
-    protected Communication communication = new Communication();
+    protected Communication communication;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -24,10 +24,11 @@ public class DiscoveryBroadcastReceiver extends BroadcastReceiver{
             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
             deviceAddress = device.getAddress();
             deviceName = device.getName();
-            Log.i("Bluetooth Device: ", deviceAddress +"\t"+ deviceName);
-            if(DeviceDetails.isValidDevice(deviceAddress))
-                communication.run();
-
+            Log.i("Bluetooth Device: ", deviceAddress + "\t" + deviceName);
+            if(DeviceDetails.isValidDevice(deviceAddress)) {
+                communication = new Communication(device);
+                communication.establishConnection();
+            }
         }
     }
 }

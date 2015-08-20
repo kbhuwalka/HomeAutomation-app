@@ -23,6 +23,7 @@ public class MainActivity extends ActionBarActivity {
 
     private static final int REQUEST_ENABLE_BT = 15;
 
+
     private BluetoothAdapter mBluetoothAdapter;
 
     @Override
