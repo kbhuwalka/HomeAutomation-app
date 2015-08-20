@@ -66,7 +66,57 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if( requestCode == REQUEST_ENABLE_BT){
+            if( resultCode == Activity.RESULT_OK )
+                bluetoothStarted();
+            else
+                bluetoothNotStarted();
+        }
 
+    }
+
+    private void bluetoothNotStarted() {
+        Toast.makeText(this, "Bluetooth did not start successfully.",Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    private void bluetoothStarted() {
+        Toast.makeText(this, "Bluetooth successfully started.",Toast.LENGTH_LONG).show();
+
+        ArrayList<String> mArrayList = new ArrayList<String>();
+
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+        // If there are paired devices
+        if (pairedDevices.size() > 0) {
+            // Loop through paired devices
+            for (BluetoothDevice device : pairedDevices) {
+                // Add the name and address to an array adapter to show in a ListView
+                mArrayList.add("\n"+device.getName() + "\t\t" + device.getAddress());
+            }
+        }
+
+        Log.i("Bluetooth: ", mArrayList.toString());
+
+        if(isDeviceBonded())
+            initiateConnection();
+        else
+            bondWithDevices();
+    }
+
+    private void bondWithDevices() {
+
+
+    }
+
+    private void initiateConnection() {
+
+    }
+
+    private boolean isDeviceBonded() {
+        return false;
+    }
 
     public static final String TAG = MainActivity.class.getSimpleName()+" Class";
 
