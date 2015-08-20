@@ -1,10 +1,8 @@
-package com.example.kunal.home;
+package com.example.kunal.home.View;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.app.ActionBarActivity;
@@ -13,6 +11,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import com.example.kunal.home.Controller.DiscoveryBroadcastReceiver;
+import com.example.kunal.home.R;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -106,8 +107,15 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void bondWithDevices() {
-        
+        if(mBluetoothAdapter.startDiscovery())
+            Toast.makeText(this, "Device discovery started", Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(this, "Some error occurred in starting Bluetooth device discovery", Toast.LENGTH_LONG).show();
 
+        DiscoveryBroadcastReceiver mReceiver = new DiscoveryBroadcastReceiver();
+        // Register the BroadcastReceiver
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
     }
 
     private void initiateConnection() {
