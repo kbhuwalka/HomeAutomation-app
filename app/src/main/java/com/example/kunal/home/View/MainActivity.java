@@ -3,15 +3,21 @@ package com.example.kunal.home.View;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.kunal.home.Controller.Communication;
 import com.example.kunal.home.Controller.DiscoveryBroadcastReceiver;
 import com.example.kunal.home.R;
 
@@ -23,13 +29,21 @@ public class MainActivity extends ActionBarActivity {
 
     private static final int REQUEST_ENABLE_BT = 15;
 
+    protected Button roomButton;
 
+    private ArrayList<BluetoothDevice> availableDevices;
     private BluetoothAdapter mBluetoothAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        roomButton = (Button) findViewById(R.id.Discover);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(devicesUpdatedBroadcastReceiver,
+                new IntentFilter(DiscoveryBroadcastReceiver.DEVICES_UPDATED));
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(mBluetoothAdapter == null)
@@ -42,7 +56,7 @@ public class MainActivity extends ActionBarActivity {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
         else{
-            bluetoothStarted();
+            scanForDevices();
         }
     }
 
@@ -72,7 +86,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if( requestCode == REQUEST_ENABLE_BT){
             if( resultCode == Activity.RESULT_OK )
-                bluetoothStarted();
+                scanForDevices();
             else
                 bluetoothNotStarted();
         }
@@ -80,12 +94,35 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void bluetoothNotStarted() {
-        Toast.makeText(this, "Bluetooth did not start successfully.",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Bluetooth did not start successfully.", Toast.LENGTH_LONG).show();
         finish();
     }
 
-    private void bluetoothStarted() {
-        Toast.makeText(this, "Bluetooth successfully started.",Toast.LENGTH_LONG).show();
+    private void scanForDevices() {
+
+        Toast.makeText(this, "Bluetooth successfully started.", Toast.LENGTH_LONG).show();
+
+        if(mBluetoothAdapter.startDiscovery())
+            Toast.makeText(this, "Device discovery started", Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(this, "Some error occurred in starting Bluetooth device discovery", Toast.LENGTH_LONG).show();
+
+        DiscoveryBroadcastReceiver mReceiver = new DiscoveryBroadcastReceiver();
+        // Register the BroadcastReceiver
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
+
+    }
+
+    private void bondWithDevices() {
+
+    }
+
+    private void initiateConnection() {
+
+    }
+
+    private boolean isDeviceBonded() {
 
         ArrayList<String> mArrayList = new ArrayList<String>();
 
@@ -101,32 +138,27 @@ public class MainActivity extends ActionBarActivity {
 
         Log.i("Bluetooth: ", mArrayList.toString());
 
-        if(isDeviceBonded())
-            initiateConnection();
-        else
-            bondWithDevices();
-    }
-
-    private void bondWithDevices() {
-        if(mBluetoothAdapter.startDiscovery())
-            Toast.makeText(this, "Device discovery started", Toast.LENGTH_LONG).show();
-        else
-            Toast.makeText(this, "Some error occurred in starting Bluetooth device discovery", Toast.LENGTH_LONG).show();
-
-        DiscoveryBroadcastReceiver mReceiver = new DiscoveryBroadcastReceiver();
-        // Register the BroadcastReceiver
-        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        registerReceiver(mReceiver, filter); // Don't forget to unregister during onDestroy
-    }
-
-    private void initiateConnection() {
-
-    }
-
-    private boolean isDeviceBonded() {
         return false;
     }
 
+
+
+    private BroadcastReceiver devicesUpdatedBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Extract data included in the Intent
+            if(intent.getAction().equals(DiscoveryBroadcastReceiver.DEVICES_UPDATED)){
+                availableDevices = intent.getParcelableArrayListExtra(DiscoveryBroadcastReceiver.VALID_DEVICES);
+                Log.i(TAG, "Got new devices!!\n"+availableDevices.toString());
+                enableRoomButton();
+            }
+        }
+    };
+
+
     public static final String TAG = MainActivity.class.getSimpleName()+" Class";
 
+    public void enableRoomButton() {
+
+    }
 }

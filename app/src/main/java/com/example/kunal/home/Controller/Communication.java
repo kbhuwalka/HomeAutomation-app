@@ -7,6 +7,10 @@ import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 /**
@@ -17,15 +21,20 @@ public class Communication{
     private final BluetoothSocket mBtSocket;
     private final BluetoothDevice mDevice;
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    private Method method;
 
     public Communication(BluetoothDevice device){
+        method = null;
         mDevice = device;
         BluetoothSocket temp = null;
 
         try{
-            temp = device.createRfcommSocketToServiceRecord(MY_UUID);
-        }catch(IOException e){
-            Log.e(TAG, "Unable to get a socket.");
+            method = mDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class});
+            temp = (BluetoothSocket) method.invoke(mDevice, 1);
+        } catch (InvocationTargetException e) {
+            Log.e(TAG+" error: ", "Could not invoke a method");
+        } catch (Exception e) {
+           Log.e(TAG+" error: ", "Some error occured in creating a socket.");
         }
 
         mBtSocket = temp;
@@ -35,18 +44,30 @@ public class Communication{
     public void establishConnection() {
         mBluetoothAdapter.cancelDiscovery();
 
+        pairDevice(mDevice);
+
         new Thread(new Runnable() {
             public void run() {
                 try{
                     mBtSocket.connect();
+                    Log.i("TAG", "Successfully established connection to device!");
                 }catch(IOException e){
                     cancel();
                     Log.e(TAG, "Unable to connect to Bluetooth Server.");
+                    e.printStackTrace();
                 }
             }
         }).start();
+    }
 
 
+    private void pairDevice(BluetoothDevice device) {
+        try {
+            Method method = device.getClass().getMethod("createBond", (Class[]) null);
+            method.invoke(device, (Object[]) null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void cancel() {
