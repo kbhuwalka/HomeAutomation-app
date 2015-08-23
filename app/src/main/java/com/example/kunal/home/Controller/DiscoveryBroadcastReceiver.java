@@ -61,8 +61,7 @@ public class DiscoveryBroadcastReceiver extends BroadcastReceiver{
         LocalBroadcastManager.getInstance(null).sendBroadcast(intent);
     }
 
-    public ArrayList<BluetoothDevice> getBluetoothDevices(){
-        return validDevices;
+    public void clearValidDevices(){
+        validDevices.clear();
     }
-
 }

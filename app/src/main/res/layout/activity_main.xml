@@ -1,4 +1,5 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -10,13 +11,33 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Discovery"
+        android:text="Arduino"
         android:id="@+id/Discover"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentStart="false"
-        android:textColor="#673AB7"
-        android:background="#ffffff"
+        android:textColor="#80ffffff"
+        android:background="#80ffffff"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp" />
+        android:paddingRight="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ON"
+        android:id="@+id/onButton"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/Discover"
+        android:layout_toStartOf="@+id/Discover"
+        android:background="#80ffffff" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="OFF"
+        android:id="@+id/offButton"
+        android:layout_alignTop="@+id/onButton"
+        android:layout_toRightOf="@+id/Discover"
+        android:layout_toEndOf="@+id/Discover"
+        android:background="#80ffffff" />
 </RelativeLayout>

@@ -16,48 +16,91 @@ import java.util.UUID;
 /**
  * Created by Kunal on 8/20/2015.
  */
-public class Communication{
+public class Communication {
 
-    private final BluetoothSocket mBtSocket;
+    private BluetoothSocket mBtSocket;
     private final BluetoothDevice mDevice;
     private final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     private Method method;
+    private boolean isConnecting;
 
     public Communication(BluetoothDevice device){
         method = null;
         mDevice = device;
-        BluetoothSocket temp = null;
+        isConnecting = false;
+        createSocket();
+    }
 
+    private boolean createSocket() {
         try{
             method = mDevice.getClass().getMethod("createRfcommSocket", new Class[] {int.class});
-            temp = (BluetoothSocket) method.invoke(mDevice, 1);
+            mBtSocket = (BluetoothSocket) method.invoke(mDevice, 1);
+            return true;
         } catch (InvocationTargetException e) {
             Log.e(TAG+" error: ", "Could not invoke a method");
         } catch (Exception e) {
-           Log.e(TAG+" error: ", "Some error occured in creating a socket.");
+            Log.e(TAG+" error: ", "Some error occurred in creating a socket.");
         }
-
-        mBtSocket = temp;
-
+        return false;
     }
 
-    public void establishConnection() {
+    public boolean establishConnection() {
         mBluetoothAdapter.cancelDiscovery();
 
         pairDevice(mDevice);
 
+        if(mBtSocket==null)
+            createSocket();
+
+        if(isConnected())
+            return false;
+
+
+        Log.i(TAG, "Trying to connect to server...");
+        try{
+            mBtSocket.connect();
+            Log.i("TAG", "Successfully established connection to device!");
+            return true;
+        }catch(IOException e){
+            cancel();
+            Log.e(TAG, "Unable to connect to Bluetooth Server.");
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean isConnected() {
+        return mBtSocket.isConnected();
+    }
+
+    public void sendDataToDevice (final byte[] data){
+        if(isConnecting)
+            return;
+
         new Thread(new Runnable() {
+            @Override
             public void run() {
-                try{
-                    mBtSocket.connect();
-                    Log.i("TAG", "Successfully established connection to device!");
-                }catch(IOException e){
-                    cancel();
-                    Log.e(TAG, "Unable to connect to Bluetooth Server.");
-                    e.printStackTrace();
-                }
+                isConnecting = true;
+                if(establishConnection())
+                    if(sendData(data))
+                        cancel();
+                isConnecting = false;
             }
         }).start();
+    }
+
+    public boolean sendData(byte[] data){
+        try {
+            OutputStream output = mBtSocket.getOutputStream();
+            Log.i(TAG, "Output stream opened");
+            output.write(data);
+            Log.i(TAG, "Data successfully sent!");
+            return true;
+        } catch (IOException e) {
+            Log.e(TAG,"Could not get OutputStream.");
+            e.printStackTrace();
+        }
+        return false;
     }
 
 
@@ -70,9 +113,10 @@ public class Communication{
         }
     }
 
-    private void cancel() {
+    public void cancel() {
         try{
             mBtSocket.close();
+            mBtSocket = null;
         }catch (IOException closeException){
             Log.e(TAG, "Unable to close the Bluetooth Socket");
         }
