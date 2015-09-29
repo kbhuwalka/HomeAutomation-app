@@ -6,7 +6,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
     android:id="@+id/mainRelativeLayout"
-    android:background="#9575CD">
+    android:background="#FFA000">
 
     <Button
         android:layout_width="wrap_content"
@@ -18,26 +18,46 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ON"
+        android:text="LIGHT"
         android:id="@+id/onButton"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/Discover"
-        android:layout_toStartOf="@+id/Discover"
-        android:background="#80ffffff" />
+        android:background="#FFECB3"
+        android:layout_marginTop="52dp"
+        android:layout_below="@+id/Discover"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OFF"
+        android:text="LIGHT"
         android:id="@+id/offButton"
+        android:background="#FFECB3"
         android:layout_alignTop="@+id/onButton"
-        android:layout_toRightOf="@+id/Discover"
-        android:layout_toEndOf="@+id/Discover"
-        android:background="#80ffffff" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LIGHT"
+        android:id="@+id/button"
+        android:background="#FFECB3"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LIGHT"
+        android:id="@+id/button2"
+        android:background="#FFECB3"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

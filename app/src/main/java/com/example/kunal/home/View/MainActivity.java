@@ -31,7 +31,9 @@ public class MainActivity extends ActionBarActivity {
 
     protected Button roomButton;
     protected Button onButton;
-    protected Button offButtom;
+    protected Button offButton;
+    protected Button button;
+    protected Button button2;
 
     private ArrayList<BluetoothDevice> availableDevices = new ArrayList<BluetoothDevice>();
     private BluetoothAdapter mBluetoothAdapter;
@@ -47,7 +49,9 @@ public class MainActivity extends ActionBarActivity {
 
         roomButton = (Button) findViewById(R.id.Discover);
         onButton = (Button) findViewById(R.id.onButton);
-        offButtom = (Button) findViewById(R.id.offButton);
+        offButton = (Button) findViewById(R.id.offButton);
+        button = (Button) findViewById(R.id.button);
+        button2 = (Button) findViewById(R.id.button2);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(mBluetoothAdapter == null)
@@ -167,8 +171,8 @@ public class MainActivity extends ActionBarActivity {
     public void updateRoomButtons() {
         arduino = null;
         toggleSwitches(false);
-        roomButton.setTextColor(Color.parseColor("#80ffffff"));
-        roomButton.setBackgroundColor(Color.parseColor("#80ffffff"));
+        roomButton.setTextColor(Color.parseColor("#212121"));
+        roomButton.setBackgroundColor(Color.parseColor("#FFC107"));
         for(BluetoothDevice device : availableDevices){
             if(device.getAddress().equals("20:14:03:19:90:73"))
                 arduino = device;
@@ -190,18 +194,28 @@ public class MainActivity extends ActionBarActivity {
 
     private void toggleSwitches(boolean state) {
         if(state==false){
-            onButton.setBackgroundColor(Color.parseColor("#70689F38"));
-            onButton.setTextColor(Color.parseColor("#70ffffff"));
-            offButtom.setBackgroundColor(Color.parseColor("#70D32F2F"));
-            offButtom.setTextColor(Color.parseColor("#70ffffff"));
+            onButton.setBackgroundColor(Color.parseColor("#FFECB3"));
+            onButton.setTextColor(Color.parseColor("#212121"));
+            offButton.setBackgroundColor(Color.parseColor("#FFECB3"));
+            offButton.setTextColor(Color.parseColor("#212121"));
+            button.setBackgroundColor(Color.parseColor("#FFECB3"));
+            button.setTextColor(Color.parseColor("#212121"));
+            button2.setBackgroundColor(Color.parseColor("#FFECB3"));
+            button2.setTextColor(Color.parseColor("#212121"));
             onButton.setOnClickListener(null);
-            offButtom.setOnClickListener(null);
+            offButton.setOnClickListener(null);
+            button.setOnClickListener(null);
+            button2.setOnClickListener(null);
             return;
         }
-        onButton.setBackgroundColor(Color.parseColor("#689F38"));
+        onButton.setBackgroundColor(Color.parseColor("#FF5722"));
         onButton.setTextColor(Color.parseColor("#ffffff"));
-        offButtom.setBackgroundColor(Color.parseColor("#D32F2F"));
-        offButtom.setTextColor(Color.parseColor("#ffffff"));
+        offButton.setBackgroundColor(Color.parseColor("#FF5722"));
+        offButton.setTextColor(Color.parseColor("#ffffff"));
+        button.setBackgroundColor(Color.parseColor("#FF5722"));
+        button.setTextColor(Color.parseColor("#ffffff"));
+        button2.setBackgroundColor(Color.parseColor("#FF5722"));
+        button2.setTextColor(Color.parseColor("#ffffff"));
 
 
         View.OnClickListener onListener = new View.OnClickListener() {
@@ -219,8 +233,24 @@ public class MainActivity extends ActionBarActivity {
             }
         };
 
+        View.OnClickListener buttonListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                connectedDevice.sendDataToDevice(new byte[]{10});
+            }
+        };
+
+        View.OnClickListener button2Listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                connectedDevice.sendDataToDevice(new byte[]{9});
+            }
+        };
+
         onButton.setOnClickListener(onListener);
-        offButtom.setOnClickListener(offListener);
+        offButton.setOnClickListener(offListener);
+        button.setOnClickListener(buttonListener);
+        button2.setOnClickListener(button2Listener);
 
     }
 
