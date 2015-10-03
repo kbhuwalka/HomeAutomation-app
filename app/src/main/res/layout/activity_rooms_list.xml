@@ -1,0 +1,17 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/rooms_list_activity_horizontal_margin"
+    android:paddingRight="@dimen/rooms_list_activity_horizontal_margin"
+    android:paddingTop="@dimen/rooms_list_activity_vertical_margin"
+    android:paddingBottom="@dimen/rooms_list_activity_vertical_margin"
+    tools:context="com.example.kunal.home.View.RoomsList">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/roomsList"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#EEEEEE" />
+
+</RelativeLayout>

@@ -11,10 +11,12 @@ import android.graphics.Color;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -25,7 +27,7 @@ import com.example.kunal.home.R;
 import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName()+" Class";
     public static final int REQUEST_ENABLE_BT = 15;
 
@@ -47,6 +49,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         roomButton = (Button) findViewById(R.id.Discover);
         onButton = (Button) findViewById(R.id.onButton);
         offButton = (Button) findViewById(R.id.offButton);
@@ -59,14 +63,24 @@ public class MainActivity extends ActionBarActivity {
         else
             Log.i(TAG, "Bluetooth available");
 
-        if (!mBluetoothAdapter.isEnabled()) {
-            //The intent tries to turn on Bluetooth
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);  //Check the status of Bluetooth request
-        }
-        else{
-            scanForDevices();
-        }
+        roomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, RoomsList.class);
+                startActivity(intent);
+            }
+        });
+
+      if(mBluetoothAdapter != null){
+          if (!mBluetoothAdapter.isEnabled()) {
+              //The intent tries to turn on Bluetooth
+              Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+              startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);  //Check the status of Bluetooth request
+          }
+          else{
+              scanForDevices();
+          }
+      }
     }
 
     @Override
@@ -174,7 +188,7 @@ public class MainActivity extends ActionBarActivity {
         roomButton.setTextColor(Color.parseColor("#212121"));
         roomButton.setBackgroundColor(Color.parseColor("#FFC107"));
         for(BluetoothDevice device : availableDevices){
-            if(device.getAddress().equals("20:14:03:19:90:73"))
+            if(device.getAddress().equals("30:15:01:22:09:34"))
                 arduino = device;
         }
         if(arduino!=null){
@@ -186,10 +200,10 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void connectToDevice(BluetoothDevice device) {
-//        if(connectedDevice!=null && connectedDevice.isConnected())
-//            return;
+        if(connectedDevice!=null && connectedDevice.isConnected())
+            return;
        connectedDevice = new Communication(device);
-//        connectedDevice.establishConnection();
+        connectedDevice.establishConnection();
       }
 
     private void toggleSwitches(boolean state) {
@@ -222,28 +236,28 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(MainActivity.this, "Button Clicked!", Toast.LENGTH_SHORT).show();
-                connectedDevice.sendDataToDevice(new byte[]{11});
+                connectedDevice.sendData(new byte[]{12});
             }
         };
 
         View.OnClickListener offListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                connectedDevice.sendDataToDevice(new byte[]{12});
+                connectedDevice.sendData(new byte[]{13});
             }
         };
 
         View.OnClickListener buttonListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                connectedDevice.sendDataToDevice(new byte[]{10});
+                connectedDevice.sendData(new byte[]{14});
             }
         };
 
         View.OnClickListener button2Listener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                connectedDevice.sendDataToDevice(new byte[]{9});
+                connectedDevice.sendData(new byte[]{15});
             }
         };
 
