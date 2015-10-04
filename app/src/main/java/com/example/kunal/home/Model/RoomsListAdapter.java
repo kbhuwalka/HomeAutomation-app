@@ -1,43 +1,37 @@
 package com.example.kunal.home.Model;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.DataSetObserver;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.kunal.home.R;
 import com.example.kunal.home.View.RoomDetails;
-import com.example.kunal.home.View.RoomsList;
 
 import java.util.ArrayList;
 
 /**
  * Created by Kunal on 10/2/2015.
  */
-public class RoomsListAdapter extends RecyclerView.Adapter<RoomsListAdapter.RoomViewHolder> implements Devices{
+public class RoomsListAdapter extends RecyclerView.Adapter<RoomsListAdapter.RoomViewHolder>{
 
     private Context mContext;
     private final LayoutInflater mInflater;
     private static RecyclerView mRecyclerView;
+    public ArrayList<DeviceDetails> mDataSet;
 
 
     public RoomsListAdapter(Context roomsList, RecyclerView recyclerView) {
         mContext = roomsList;
         mInflater = LayoutInflater.from(mContext);
         mRecyclerView = recyclerView;
+        mDataSet = new ArrayList<DeviceDetails>();
     }
 
 
@@ -52,27 +46,21 @@ public class RoomsListAdapter extends RecyclerView.Adapter<RoomsListAdapter.Room
 
     @Override
     public void onBindViewHolder(RoomViewHolder roomViewHolder, final int position) {
-        formatItem(roomViewHolder,position);
+        formatItem(roomViewHolder, position);
     }
 
     private void formatItem(RoomViewHolder roomViewHolder, final int position) {
-        DeviceDetails room = rooms.get(position);
+        DeviceDetails room = mDataSet.get(position);
         roomViewHolder.cardTitle.setText(room.getName());
+
+        roomViewHolder.moreDetails.setVisibility(View.GONE); // Button hidden until any future need arises
 
         if(!room.isAvailable){
             roomViewHolder.peopleDetails.setText("Room details are currently unavailable.");
             roomViewHolder.peopleDetails.setPadding(dp(16), dp(0), dp(16), dp(24));
 
-            roomViewHolder.lightDetails.setVisibility(View.GONE);
-            roomViewHolder.moreDetails.setVisibility(View.GONE);
-
-            //roomViewHolder.cardContainer.setVisibility(View.GONE);
-
             return;
         }
-
-        //roomViewHolder.cardContainer.setVisibility(View.VISIBLE);
-        roomViewHolder.lightDetails.setVisibility(View.VISIBLE);
 
         String peopleDetails = mContext.getResources().getString(R.string.authorized_people_in_room);
         peopleDetails =String.format(peopleDetails, room.getAuthorizedPeople());
@@ -83,28 +71,19 @@ public class RoomsListAdapter extends RecyclerView.Adapter<RoomsListAdapter.Room
         roomViewHolder.peopleDetails.setText(peopleDetails);
         roomViewHolder.lightDetails.setText(lights);
 
-
         roomViewHolder.cardContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, RoomDetails.class);
-                intent.putExtra(CONNECT_DEVICE_POSITION, position);
+                intent.putExtra(Devices.CONNECT_DEVICE_POSITION, position);
                 mContext.startActivity(intent);
             }
         });
     }
 
-    public  void updateView(int index){
-        if(mRecyclerView==null)
-            return;
-        View itemView = mRecyclerView.getChildAt(index);
-        RoomViewHolder holder = new RoomViewHolder(itemView);
-        formatItem(holder,index);
-    }
-
     @Override
     public int getItemCount() {
-        return Devices.rooms.size();
+        return mDataSet.size();
     }
 
     public static class RoomViewHolder extends RecyclerView.ViewHolder {
@@ -125,12 +104,29 @@ public class RoomsListAdapter extends RecyclerView.Adapter<RoomsListAdapter.Room
         }
     }
 
-
-
     private int dp(int px){
         float scale = mContext.getResources().getDisplayMetrics().density;
         int dpAsPixels = (int) (px*scale + 0.5f);
         return dpAsPixels;
+    }
+
+    public void add(int position, DeviceDetails item) {
+        mDataSet.add(position, item);
+        notifyItemInserted(position);
+    }
+
+    public void remove(DeviceDetails item) {
+        int position = mDataSet.indexOf(item);
+        mDataSet.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void removeAll() {
+        for(DeviceDetails item : mDataSet){
+            int position = mDataSet.indexOf(item);
+            mDataSet.remove(item);
+            notifyItemRemoved(position);
+        }
     }
 
 }

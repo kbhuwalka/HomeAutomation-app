@@ -3,7 +3,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#fff">
+    android:background="#fff"
+    android:id="@+id/roomDetailsListItem">
 
     <Switch
         android:layout_width="match_parent"

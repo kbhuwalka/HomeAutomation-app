@@ -2,10 +2,12 @@ package com.example.kunal.home.Model;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -49,14 +51,21 @@ public class RoomDetailsAdapter extends RecyclerView.Adapter<RoomDetailsAdapter.
 
 
     @Override
-    public void onBindViewHolder(RoomDetailsViewHolder holder, final int position) {
+    public void onBindViewHolder(final RoomDetailsViewHolder holder, final int position) {
         holder.lightSwitch.setText(switchName[position]);
         holder.duration.setText("15 min");
+
 
         holder.lightSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean state = false;
                 communication.sendDataToDevice(new byte[]{outputData[position]});
+                if(state)
+                    holder.roomDetailsListItem.setBackgroundColor(Color.parseColor("#FFFFFF"));
+                else
+                    holder.roomDetailsListItem.setBackgroundColor(Color.parseColor("#448AFF80"));
+                state = !state;
             }
         });
     }
@@ -70,11 +79,13 @@ public class RoomDetailsAdapter extends RecyclerView.Adapter<RoomDetailsAdapter.
 
         public TextView duration;
         public Switch lightSwitch;
+        public RelativeLayout roomDetailsListItem;
 
         public RoomDetailsViewHolder(View itemView) {
             super(itemView);
             duration = (TextView) itemView.findViewById(R.id.switchDuration);
             lightSwitch = (Switch) itemView.findViewById(R.id.lightSwitch);
+            roomDetailsListItem = (RelativeLayout) itemView.findViewById(R.id.roomDetailsListItem);
         }
     }
 }

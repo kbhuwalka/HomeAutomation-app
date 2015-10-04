@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,8 +26,10 @@ import com.example.kunal.home.R;
 public class RoomsList extends AppCompatActivity {
 
     private RecyclerView roomsList;
-    private RecyclerView.Adapter mAdapter;
+    private RoomsListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+
+    private SwipeRefreshLayout swipeContainer;
 
     private DiscoveryBroadcastReceiver mReceiver = new DiscoveryBroadcastReceiver();
     private BluetoothController bluetoothController;
@@ -38,6 +41,8 @@ public class RoomsList extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rooms_list);
+
+        addPullToRefresh();
 
         bluetoothController = new BluetoothController(this);
 
@@ -56,6 +61,26 @@ public class RoomsList extends AppCompatActivity {
 
         LocalBroadcastManager.getInstance(this).registerReceiver(roomsUpdateReceiver,
                 new IntentFilter(Devices.UPDATE_INTENT_FILTER));
+    }
+
+    private void addPullToRefresh() {
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
+
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Code to refresh the list goes here
+                // swipeContainer.setRefreshing(false) once refreshing is done
+                bluetoothController.refreshAll();
+                mAdapter.removeAll();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
     }
 
     @Override
@@ -107,7 +132,6 @@ public class RoomsList extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            bluetoothController.refreshAll();
             return true;
         }
         if (id == R.id.action_search) {
@@ -121,15 +145,20 @@ public class RoomsList extends AppCompatActivity {
     private BroadcastReceiver roomsUpdateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i("Kunal", "Received update intent");
-
             int position = intent.getIntExtra(Devices.UPDATE_POSITION, 100);
             if (position < 0 && position>=Devices.rooms.size())
                 return;
-            View itemView = roomsList.getChildAt(position);
-            RoomsListAdapter.RoomViewHolder holder = new RoomsListAdapter.RoomViewHolder(itemView);
-            mAdapter.bindViewHolder(holder, position);
 
+            DeviceDetails device = Devices.rooms.get(position);
+            int index = mAdapter.getItemCount();
+
+            for(DeviceDetails room : mAdapter.mDataSet)
+                if(room.getAddress().equals(device.getAddress()))
+                    return;
+
+            mAdapter.add(index,device);
+
+            swipeContainer.setRefreshing(false);
         }
     };
 
