@@ -24,6 +24,10 @@
             android:name=".View.RoomsList"
             android:label="@string/title_activity_rooms_list" >
         </activity>
+        <activity
+            android:name=".View.RoomDetails"
+            android:label="@string/title_activity_room_details" >
+        </activity>
     </application>
 
 </manifest>

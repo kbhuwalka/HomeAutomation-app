@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="8dp"
     android:paddingRight="8dp"
-    android:id="@+id/">
+    android:id="@+id/cardContainer">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
@@ -22,7 +22,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:id="@+id/listItemCard">
 
             <TextView
                 android:id="@+id/cardTitle"
@@ -43,11 +44,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/cardTitle"
-                android:paddingBottom="24dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="16dp"
-                android:text="There are 0 authorized members in the room." />
+                android:text="@string/authorized_people_in_room" />
 
             <TextView
                 android:id="@+id/numberOfLightsText"
@@ -57,17 +57,17 @@
                 android:paddingBottom="24dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="16dp"
-                android:text="There are 0 switched on lights in the room." />
+                android:text="@string/switched_on_lights" />
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/moreDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/numberOfLightsText"
                 android:background="@android:color/transparent"
                 android:padding="8dp"
-                android:text="VIEW DETAILS" />
+                android:text="VIEW DETAILS"
+                android:textColor="#ffffff" />
 
         </RelativeLayout>
 

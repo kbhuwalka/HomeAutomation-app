@@ -10,6 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.example.kunal.home.Model.DeviceDetails;
+import com.example.kunal.home.Model.Devices;
 import com.example.kunal.home.View.MainActivity;
 
 import java.util.ArrayList;
@@ -17,16 +18,13 @@ import java.util.ArrayList;
 /**
  * Created by Kunal on 8/20/2015.
  */
-public class DiscoveryBroadcastReceiver extends BroadcastReceiver{
+public class DiscoveryBroadcastReceiver extends BroadcastReceiver implements Devices{
 
     public static final String DEVICES_UPDATED = "DEVICES_UPDATED";
     public static final String VALID_DEVICES = "VALID_DEVICES";
 
     protected String deviceAddress;
     protected String deviceName;
-    protected Communication communication;
-
-    private ArrayList<BluetoothDevice> validDevices = new ArrayList<BluetoothDevice>();
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -36,32 +34,31 @@ public class DiscoveryBroadcastReceiver extends BroadcastReceiver{
             deviceAddress = device.getAddress();
             deviceName = device.getName();
             Log.i("Bluetooth Device: ", deviceAddress + "\t" + deviceName);
-            if(DeviceDetails.isValidDevice(deviceAddress)) {
-               // communication = new Communication(device);
-               // communication.establishConnection();
-                addDeviceToList(device);
+            if(isValidDevice(deviceAddress)) {
+                BluetoothController.addAvailableDevice( device);
+                Intent updateItemIntent = new Intent(UPDATE_INTENT_FILTER);
+                updateItemIntent.putExtra(UPDATE_POSITION,position(deviceAddress));
+                LocalBroadcastManager.getInstance(context).sendBroadcast(updateItemIntent);
+                Log.i("Kunal", "Sent update intent");
             }
         }
     }
 
-    private void addDeviceToList(BluetoothDevice device) {
-
-        for(BluetoothDevice validDevice: validDevices){
-            if(validDevice.getAddress().equals(device.getAddress()))
-                return;
+    private int position(String deviceAddress) {
+        for(DeviceDetails room : rooms){
+            if(room.getAddress().equals(deviceAddress))
+                return rooms.indexOf(room);
         }
-        validDevices.add(device);
-        sendUpdateBroadcast();
+
+        return -1;
     }
 
-    private void sendUpdateBroadcast() {
-        Intent intent = new Intent();
-        intent.setAction(DEVICES_UPDATED);
-        intent.putParcelableArrayListExtra(VALID_DEVICES, validDevices);
-        LocalBroadcastManager.getInstance(null).sendBroadcast(intent);
+    public boolean isValidDevice(String address){
+        for(DeviceDetails room : rooms)
+            if(room.getAddress().equals(address))
+                return true;
+
+        return false;
     }
 
-    public void clearValidDevices(){
-        validDevices.clear();
-    }
 }

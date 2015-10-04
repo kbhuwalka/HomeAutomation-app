@@ -47,6 +47,9 @@ public class Communication {
     public boolean establishConnection() {
         mBluetoothAdapter.cancelDiscovery();
 
+        if(mDevice == null)
+            return false;
+
         pairDevice(mDevice);
 
         if(mBtSocket==null)

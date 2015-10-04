@@ -4,21 +4,35 @@ package com.example.kunal.home.Model;
  * Created by Kunal on 8/20/2015.
  */
 public class DeviceDetails {
-    private static String[] mAddress = {
-            "A0:F4:50:CD:D9:98", //Kunal's Mobile
-            "14:30:C6:16:F8:33", //Shubham's Mobile
-            "20:14:03:19:90:73",  // The working HC-05
-            "30:15:01:22:09:34"
-    };
 
-    public static boolean isValidDevice(String deviceAddress){
+    private String mName;
+    private String mAddress;
+    private int switchedOnLights;
+    private int authorizedPeople;
 
-        for(int i=0; i<mAddress.length;i++){
-            if(mAddress[i].equals(deviceAddress))
-                return true;
-        }
+    public boolean isAvailable;
+    public boolean isConnected;
 
-        return false;
+    public DeviceDetails(String address, String name){
+        mAddress = address;
+        mName = name;
+        isAvailable = false;
+        isConnected = false;
     }
 
+    public String getAddress(){
+        return mAddress;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public int getSwitchedOnLights() {
+        return switchedOnLights;
+    }
+
+    public int getAuthorizedPeople() {
+        return authorizedPeople;
+    }
 }
