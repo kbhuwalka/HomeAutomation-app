@@ -1,5 +1,6 @@
 package com.example.kunal.home.Model;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.kunal.home.Controller.Communication;
 import com.example.kunal.home.R;
 import com.example.kunal.home.View.RoomDetails;
 
@@ -19,11 +21,11 @@ import java.util.ArrayList;
 /**
  * Created by Kunal on 10/2/2015.
  */
-public class RoomsListAdapter extends RecyclerView.Adapter<RoomsListAdapter.RoomViewHolder>{
+public class RoomsListAdapter extends RecyclerView.Adapter<RoomsListAdapter.RoomViewHolder> implements Devices{
 
     private Context mContext;
     private final LayoutInflater mInflater;
-    private static RecyclerView mRecyclerView;
+    public static RecyclerView mRecyclerView;
     public ArrayList<DeviceDetails> mDataSet;
 
 
@@ -50,7 +52,7 @@ public class RoomsListAdapter extends RecyclerView.Adapter<RoomsListAdapter.Room
     }
 
     private void formatItem(RoomViewHolder roomViewHolder, final int position) {
-        DeviceDetails room = mDataSet.get(position);
+        final DeviceDetails room = mDataSet.get(position);
         roomViewHolder.cardTitle.setText(room.getName());
 
         roomViewHolder.moreDetails.setVisibility(View.GONE); // Button hidden until any future need arises
@@ -68,14 +70,16 @@ public class RoomsListAdapter extends RecyclerView.Adapter<RoomsListAdapter.Room
         String lights = mContext.getResources().getString(R.string.switched_on_lights);
         lights = String.format(lights, room.getSwitchedOnLights());
 
-        roomViewHolder.peopleDetails.setText(peopleDetails);
+        //roomViewHolder.peopleDetails.setText(peopleDetails);
+        roomViewHolder.peopleDetails.setVisibility(View.GONE);
         roomViewHolder.lightDetails.setText(lights);
 
         roomViewHolder.cardContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int index = Devices.rooms.indexOf(room);
                 Intent intent = new Intent(mContext, RoomDetails.class);
-                intent.putExtra(Devices.CONNECT_DEVICE_POSITION, position);
+                intent.putExtra(Devices.CONNECT_DEVICE_POSITION, index );
                 mContext.startActivity(intent);
             }
         });
@@ -86,7 +90,7 @@ public class RoomsListAdapter extends RecyclerView.Adapter<RoomsListAdapter.Room
         return mDataSet.size();
     }
 
-    public static class RoomViewHolder extends RecyclerView.ViewHolder {
+    public static class RoomViewHolder extends RecyclerView.ViewHolder{
 
         public TextView cardTitle;
         public TextView peopleDetails;
@@ -111,6 +115,9 @@ public class RoomsListAdapter extends RecyclerView.Adapter<RoomsListAdapter.Room
     }
 
     public void add(int position, DeviceDetails item) {
+        BluetoothDevice router = Devices.availableBluetoothDevices.get(Devices.availableDevices.indexOf(item.getAddress()));
+        Communication communication  = new Communication(router);
+        communication.receiveDataFromDevice();
         mDataSet.add(position, item);
         notifyItemInserted(position);
     }

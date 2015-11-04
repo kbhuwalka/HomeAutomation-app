@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.kunal.home.Controller.BluetoothController;
+import com.example.kunal.home.Controller.Communication;
 import com.example.kunal.home.Controller.DiscoveryBroadcastReceiver;
 import com.example.kunal.home.Model.DeviceDetails;
 import com.example.kunal.home.Model.Devices;
@@ -26,7 +27,7 @@ import com.example.kunal.home.R;
 public class RoomsList extends AppCompatActivity {
 
     private RecyclerView roomsList;
-    private RoomsListAdapter mAdapter;
+    public static RoomsListAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private SwipeRefreshLayout swipeContainer;
@@ -47,9 +48,6 @@ public class RoomsList extends AppCompatActivity {
         bluetoothController = new BluetoothController(this);
 
         roomsList = (RecyclerView) findViewById(R.id.roomsList);
-        //Since the contents do not change the size of the layout, this improves performance
-        roomsList.setHasFixedSize(true);
-
 
         //Using a GridLayoutManager
         mLayoutManager = new GridLayoutManager(this, NUMBER_OF_COLUMNS);
@@ -121,6 +119,12 @@ public class RoomsList extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_rooms_list, menu);
         return true;
+    }
+
+    @Override
+    public void onBackPressed(){
+        finish();
+        return;
     }
 
     @Override

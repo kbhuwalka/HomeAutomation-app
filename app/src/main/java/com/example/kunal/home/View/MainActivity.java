@@ -67,6 +67,7 @@ public class MainActivity extends Activity {
     private void goToNextScreen() {
         Intent intent = new Intent(MainActivity.this, RoomsList.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -76,6 +77,11 @@ public class MainActivity extends Activity {
         // Register the BroadcastReceiver for receiving new Bluetooth devices
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        return;
     }
 
     @Override

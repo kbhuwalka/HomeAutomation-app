@@ -13,7 +13,9 @@ import com.example.kunal.home.Model.DeviceDetails;
 import com.example.kunal.home.Model.Devices;
 import com.example.kunal.home.Model.RoomsListAdapter;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Kunal on 10/4/2015.
@@ -26,9 +28,9 @@ public class BluetoothController implements Devices{
 
 
     public BluetoothController(Context context){
-        rooms.add(new DeviceDetails("30:15:01:22:09:34", "Reception"));
+        rooms.add(new DeviceDetails("20:15:05:05:74:20", "Reception"));
         rooms.add(new DeviceDetails("20:14:03:19:90:73", "Waiting Room"));
-        rooms.add(new DeviceDetails("20:14:03:19:90:74", "Director's Office"));
+        rooms.add(new DeviceDetails("20:14:03:19:90:74", "Secretary's Office"));
         rooms.add(new DeviceDetails("20:14:03:19:90:75", "Office 1"));
         rooms.add(new DeviceDetails("20:14:03:19:90:76", "Office 2"));
         rooms.add(new DeviceDetails("20:14:03:19:90:77", "Office 3"));
@@ -69,6 +71,7 @@ public class BluetoothController implements Devices{
             }
         }
     }
+
 
     public static boolean isBluetoothAdapterEnabled(){
         return mBluetoothAdapter.isEnabled();

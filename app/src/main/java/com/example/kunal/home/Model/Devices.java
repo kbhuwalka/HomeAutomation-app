@@ -24,14 +24,16 @@ public interface Devices {
             "Light 2",
             "Light 3",
             "Light 4",
-            "Light 5"
+            "Light 5",
+            "Light 6"
     };
 
-    public static byte[] outputData = {
-            9,
-            10,
-            11,
-            12,
-            13
+    public static byte[] pin = {
+            13,
+            14,
+            15,
+            16,
+            17,
+            18
     };
 }

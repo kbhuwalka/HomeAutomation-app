@@ -1,5 +1,6 @@
 package com.example.kunal.home.View;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,7 @@ import com.example.kunal.home.R;
 public class RoomDetails extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    public static RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
     private int devicePosition;
@@ -42,7 +43,7 @@ public class RoomDetails extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         //Adapter to properly format content
-        mAdapter = new RoomDetailsAdapter(this, devicePosition);
+        mAdapter = new RoomDetailsAdapter(this, mRecyclerView, devicePosition);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -67,4 +68,5 @@ public class RoomDetails extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

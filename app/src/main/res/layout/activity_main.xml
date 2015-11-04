@@ -9,14 +9,6 @@
     android:background="@color/primary">
 
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/logo"
-        android:paddingTop="24dp" />
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -37,8 +29,6 @@
         android:layout_height="wrap_content"
         android:text="You need to turn on Bluetooth"
         android:id="@+id/splashMessage"
-        android:layout_below="@+id/imageView"
-        android:layout_centerHorizontal="true"
         android:paddingLeft="16dp"
         android:paddingTop="24dp"
         android:paddingRight="16dp"
@@ -46,6 +36,19 @@
         android:textColor="#ffffff"
         android:singleLine="false"
         android:textSize="24sp"
-        android:gravity="center_vertical|center_horizontal" />
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_above="@+id/bluetoothButton"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Lucy"
+        android:id="@+id/textView"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:textColor="#ffffff"
+        android:textSize="48sp" />
 
 </RelativeLayout>
