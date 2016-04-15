@@ -1,27 +1,16 @@
-package com.example.kunal.home.Controller;
+package com.example.kunal.lucy.Controller;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.example.kunal.home.Model.DeviceDetails;
-import com.example.kunal.home.Model.Devices;
-import com.example.kunal.home.Model.RoomDetailsAdapter;
-import com.example.kunal.home.View.RoomDetails;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -73,18 +62,15 @@ public class Communication {
         if(isConnected())
             return false;
 
-
-        Log.i(TAG, "Trying to connect to server...");
         try{
             while (!mBtSocket.isConnected())
                 mBtSocket.connect();
-            Log.i("TAG", "Successfully established connection to device!");
+            Log.i(TAG, "Successfully established connection to device!");
             outputStream = mBtSocket.getOutputStream();
             inputStream = mBtSocket.getInputStream();
             return true;
         }catch(Exception e){
             cancel();
-            //Toast.makeText(,"Unable to connect to Bluetooth Server.", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
         return false;
@@ -94,6 +80,11 @@ public class Communication {
         return mBtSocket.isConnected();
     }
 
+
+    /**
+     * Creates a new thread to send data to arduino and receive updated data back.
+     * @param data The output that is to be sent to the Arduino
+     */
     public void sendDataToDevice (final byte[] data){
         if(isConnecting)
             return;
@@ -106,13 +97,15 @@ public class Communication {
                     sendData(data);
                     receiveData();
                 }
-
                         cancel();
                 isConnecting = false;
             }
         }).start();
     }
 
+    /*
+     *Creates a new thread to receive data from Arduino
+     */
     public void receiveDataFromDevice(){
         if(isConnecting)
             return;
@@ -121,7 +114,6 @@ public class Communication {
             public void run() {
                 if(establishConnection())
                     receiveData();
-
                 cancel();
                 isConnecting = false;
             }
@@ -132,41 +124,49 @@ public class Communication {
 
     public boolean receiveData(){
         byte inputBuffer[] = new byte[mData.INPUT_BUFFER_SIZE];
-        int bytesRead = 0;
         boolean receivedValidInput = false;
 
         try {
-            while(!receivedValidInput){
-                receivedValidInput = false;
-                bytesRead = 0;
-                sendData(new byte[]{127});
-                Thread.sleep(100);
-                while(inputStream.available() > 0 ){
-                    bytesRead += inputStream.read(inputBuffer,bytesRead,mData.INPUT_BUFFER_SIZE-bytesRead);
-                    mData.setInput(inputBuffer);
-                    if(!mData.containsValidMessage()){
-                        sendData(new byte[]{127});
-                        bytesRead = 0;
-                        receivedValidInput = false;
-                    }
-                    else{
-                        mData.updateData();
-                        receivedValidInput = true;
-                    }
-                }
+            while(!receivedValidInput){ // Request for data and read till a valid reply is received
+
+                requestForInput();
+                while(inputStream.available() > 0)
+                    inputStream.read(inputBuffer);
+                mData.setInput(inputBuffer);
+                receivedValidInput = mData.containsValidMessage();
+                if(!receivedValidInput)
+                    requestForInput();
+                 else
+                    mData.updateData();
+                Arrays.fill(inputBuffer, (byte) 0); //Clear the buffer by setting all elements to 0
             }
-
-
             return true;
         } catch (IOException e) {
             Log.e(TAG,"Some error occurred in retrieving the data");
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            return false;
         }
-
-        return false;
     }
 
+    //Send the request code to Arduino for a reply
+    private void requestForInput() {
+        sendData(new byte[]{127});
+    }
+
+    /*
+        Clears out the old data that might be present in the InputStream by
+        reading data till the stream is empty
+     */
+    private void clearInputStream() {
+        try{
+            while(inputStream.available() > 0)
+                inputStream.read();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     public boolean sendData(byte[] data){
@@ -207,6 +207,6 @@ public class Communication {
 
     public static final String UUID_STRING = "12dbe1c7-202f-4e09-8572-172fb79fb6ef";
     public static final UUID MY_UUID = UUID.fromString(UUID_STRING);
-    public static final String SERVICE_NAME = "KS_HomeAutomation";
+    public static final String SERVICE_NAME = "HomeAutomation";
     public static final String TAG = Communication.class.getSimpleName()+" Class";
 }

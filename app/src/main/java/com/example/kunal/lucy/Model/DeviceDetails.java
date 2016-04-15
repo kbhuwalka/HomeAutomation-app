@@ -1,10 +1,6 @@
-package com.example.kunal.home.Model;
+package com.example.kunal.lucy.Model;
 
 import android.bluetooth.BluetoothDevice;
-
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by Kunal on 8/20/2015.
@@ -15,7 +11,6 @@ public class DeviceDetails implements Devices{
     private String mName;
     private String mAddress;
     private byte switchedOnLights;
-    private byte authorizedPeople;
     public long lastUpdated[];
     public boolean lightStates[];
 
@@ -46,10 +41,5 @@ public class DeviceDetails implements Devices{
                 switchedOnLights++;
         return switchedOnLights;
     }
-
-    public int getAuthorizedPeople() {
-        return authorizedPeople;
-    }
-
 
 }

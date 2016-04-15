@@ -1,20 +1,20 @@
-package com.example.kunal.home.Model;
+package com.example.kunal.lucy.Model;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.example.kunal.home.Controller.Communication;
-import com.example.kunal.home.Controller.NetworkDataController;
-import com.example.kunal.home.R;
+import com.example.kunal.lucy.Controller.Communication;
+import com.example.kunal.lucy.Controller.NetworkDataController;
+import com.example.kunal.lucy.R;
 
 import java.util.Date;
 
@@ -66,12 +66,11 @@ public class RoomDetailsAdapter extends RecyclerView.Adapter<RoomDetailsAdapter.
         long lastUpdated = room.lastUpdated[position];
         holder.duration.setText(updateTimeMessage(lastUpdated, room.lightStates[position]));
 
-        holder.lightSwitch.setOnClickListener(new View.OnClickListener() {
+        holder.lightSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View v) {
-                Log.i("Kunal", "Starting to send");
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //buttonView.setChecked(isChecked);
                 communication.sendDataToDevice(NetworkDataController.generateValidOutput(position));
-                notifyDataSetChanged();
             }
         });
     }

@@ -1,6 +1,5 @@
-package com.example.kunal.home.View;
+package com.example.kunal.lucy.View;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,10 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.kunal.home.Model.DeviceDetails;
-import com.example.kunal.home.Model.Devices;
-import com.example.kunal.home.Model.RoomDetailsAdapter;
-import com.example.kunal.home.R;
+import com.example.kunal.lucy.Model.Devices;
+import com.example.kunal.lucy.Model.RoomDetailsAdapter;
+import com.example.kunal.lucy.R;
 
 public class RoomDetails extends AppCompatActivity {
 

@@ -1,10 +1,9 @@
-package com.example.kunal.home.Model;
+package com.example.kunal.lucy.Model;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,9 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.kunal.home.Controller.Communication;
-import com.example.kunal.home.R;
-import com.example.kunal.home.View.RoomDetails;
+import com.example.kunal.lucy.Controller.Communication;
+import com.example.kunal.lucy.R;
+import com.example.kunal.lucy.View.RoomDetails;
 
 import java.util.ArrayList;
 
@@ -64,8 +63,8 @@ public class RoomsListAdapter extends RecyclerView.Adapter<RoomsListAdapter.Room
             return;
         }
 
-        String peopleDetails = mContext.getResources().getString(R.string.authorized_people_in_room);
-        peopleDetails =String.format(peopleDetails, room.getAuthorizedPeople());
+//        String peopleDetails = mContext.getResources().getString(R.string.authorized_people_in_room);
+//        peopleDetails =String.format(peopleDetails, room.getAuthorizedPeople());
 
         String lights = mContext.getResources().getString(R.string.switched_on_lights);
         lights = String.format(lights, room.getSwitchedOnLights());

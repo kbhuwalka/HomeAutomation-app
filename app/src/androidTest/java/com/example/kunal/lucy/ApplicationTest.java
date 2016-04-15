@@ -1,4 +1,4 @@
-package com.example.kunal.home;
+package com.example.kunal.lucy;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

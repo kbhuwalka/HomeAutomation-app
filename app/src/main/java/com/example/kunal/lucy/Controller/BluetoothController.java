@@ -1,21 +1,13 @@
-package com.example.kunal.home.Controller;
+package com.example.kunal.lucy.Controller;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.example.kunal.home.Model.DeviceDetails;
-import com.example.kunal.home.Model.Devices;
-import com.example.kunal.home.Model.RoomsListAdapter;
-
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Date;
+import com.example.kunal.lucy.Model.DeviceDetails;
+import com.example.kunal.lucy.Model.Devices;
 
 /**
  * Created by Kunal on 10/4/2015.
@@ -28,12 +20,12 @@ public class BluetoothController implements Devices{
 
 
     public BluetoothController(Context context){
-        rooms.add(new DeviceDetails("20:15:05:05:74:20", "Reception"));
+        rooms.add(new DeviceDetails("20:15:05:08:70:26", "My Room"));
         rooms.add(new DeviceDetails("20:14:03:19:90:73", "Waiting Room"));
-        rooms.add(new DeviceDetails("20:14:03:19:90:74", "Secretary's Office"));
-        rooms.add(new DeviceDetails("20:14:03:19:90:75", "Office 1"));
-        rooms.add(new DeviceDetails("20:14:03:19:90:76", "Office 2"));
-        rooms.add(new DeviceDetails("20:14:03:19:90:77", "Office 3"));
+        rooms.add(new DeviceDetails("20:15:05:05:73:24", "Secretary's Office"));
+        rooms.add(new DeviceDetails("30:15:01:22:09:34", "Office 1"));
+        rooms.add(new DeviceDetails("20:15:05:05:73:97", "Office 2"));
+        rooms.add(new DeviceDetails("20:15:05:05:69:93", "Office 3"));
 
         mContext = context;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();

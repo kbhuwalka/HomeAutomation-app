@@ -1,4 +1,4 @@
-package com.example.kunal.home.View;
+package com.example.kunal.lucy.View;
 
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -11,18 +11,15 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.example.kunal.home.Controller.BluetoothController;
-import com.example.kunal.home.Controller.Communication;
-import com.example.kunal.home.Controller.DiscoveryBroadcastReceiver;
-import com.example.kunal.home.Model.DeviceDetails;
-import com.example.kunal.home.Model.Devices;
-import com.example.kunal.home.Model.RoomsListAdapter;
-import com.example.kunal.home.R;
+import com.example.kunal.lucy.Controller.BluetoothController;
+import com.example.kunal.lucy.Controller.DiscoveryBroadcastReceiver;
+import com.example.kunal.lucy.Model.DeviceDetails;
+import com.example.kunal.lucy.Model.Devices;
+import com.example.kunal.lucy.Model.RoomsListAdapter;
+import com.example.kunal.lucy.R;
 
 public class RoomsList extends AppCompatActivity {
 

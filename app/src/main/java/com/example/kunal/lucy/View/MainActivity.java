@@ -1,33 +1,19 @@
-package com.example.kunal.home.View;
+package com.example.kunal.lucy.View;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.kunal.home.Controller.Communication;
-import com.example.kunal.home.Controller.DiscoveryBroadcastReceiver;
-import com.example.kunal.home.R;
-
-import java.util.ArrayList;
+import com.example.kunal.lucy.R;
 
 
 public class MainActivity extends Activity {
@@ -62,6 +48,7 @@ public class MainActivity extends Activity {
             else    //If Bluetooth is already turned on
                 goToNextScreen();
         }
+
     }
 
     private void goToNextScreen() {

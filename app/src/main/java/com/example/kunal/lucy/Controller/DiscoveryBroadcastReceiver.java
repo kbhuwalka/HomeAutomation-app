@@ -1,19 +1,14 @@
-package com.example.kunal.home.Controller;
+package com.example.kunal.lucy.Controller;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.example.kunal.home.Model.DeviceDetails;
-import com.example.kunal.home.Model.Devices;
-import com.example.kunal.home.View.MainActivity;
-
-import java.util.ArrayList;
+import com.example.kunal.lucy.Model.DeviceDetails;
+import com.example.kunal.lucy.Model.Devices;
 
 /**
  * Created by Kunal on 8/20/2015.

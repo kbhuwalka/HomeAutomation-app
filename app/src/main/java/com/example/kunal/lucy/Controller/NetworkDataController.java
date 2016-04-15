@@ -1,13 +1,14 @@
-package com.example.kunal.home.Controller;
+
+package com.example.kunal.lucy.Controller;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.kunal.home.Model.DeviceDetails;
-import com.example.kunal.home.Model.Devices;
-import com.example.kunal.home.View.RoomDetails;
-import com.example.kunal.home.View.RoomsList;
+import com.example.kunal.lucy.Model.DeviceDetails;
+import com.example.kunal.lucy.Model.Devices;
+import com.example.kunal.lucy.View.RoomDetails;
+import com.example.kunal.lucy.View.RoomsList;
 
 import java.nio.ByteBuffer;
 import java.util.Date;
@@ -19,6 +20,10 @@ public class NetworkDataController {
 
     public void setInput(byte[] input) {
         this.input = input;
+        String buffer = "";
+        for(int i = 0; i< input.length; i++)
+            buffer+= input[i] + " ";
+        Log.d("NetworkDataController", "Input Buffer: " + buffer);
     }
 
     public static byte[] generateValidOutput(int index){
@@ -31,7 +36,6 @@ public class NetworkDataController {
         byte[] b = buffer.array();
         for(int i=0; i<OUTPUT_BUFFER_SIZE;i++)
             output+=b[i]+" ";
-        Log.i("Input Output Time", output);
 
         return buffer.array();
     }
@@ -41,8 +45,8 @@ public class NetworkDataController {
     }
 
     public boolean containsValidMessage(int index){
-        int start =  indexOf(input, '#',index);
-        int end = indexOf(input, '~', start+INPUT_SIZE+1);
+        int start =  lastIndexOf(input, (byte) '#');
+        int end = lastIndexOf(input, (byte) '~');
 
         /*
             If message length is smaller than required input size it's not valid
@@ -51,8 +55,16 @@ public class NetworkDataController {
         if(start == -1 || end == -1)
             return false;
 
-        if(end-start == INPUT_SIZE+1)
+        if(start > end)
+            return false;
+
+        if(end-start == INPUT_SIZE+1) {
+            String op = "";
+            for(int i = start; i < end; i++)
+                op+= input[i] + " ";
+            Log.i("NetworkDataController", "ContainsValidMessage: " + op);
             return true;
+        }
 
         return false;
     }
@@ -68,6 +80,15 @@ public class NetworkDataController {
                     return i;
 
         return -1;
+    }
+
+    private int lastIndexOf(byte[] array, byte value){
+        int lastIndex = -1;
+        for(int index = array.length -1; index >= 0; index--){
+            if(array[index]==value)
+                return index;
+        }
+        return lastIndex;
     }
 
     public void updateData() {
@@ -103,8 +124,6 @@ public class NetworkDataController {
                 super.onPostExecute(aVoid);
                 if(RoomDetails.mAdapter!=null)
                     RoomDetails.mAdapter.notifyDataSetChanged();
-                if(RoomsList.mAdapter != null)
-                    RoomsList.mAdapter.notifyDataSetChanged();
             }
         }.execute();
 
@@ -114,29 +133,16 @@ public class NetworkDataController {
         validatedInput = null;
     }
 
-//    public void extractValidInput(){
-//        if(containsValidMessage()){
-//            validatedInput = new byte[INPUT_SIZE];
-//            int start = indexOf(input, '#')+1;
-//            for(int i =0; i < INPUT_SIZE; i++){
-//                validatedInput[i] = input[start+i];
-//            }
-//        }
-//    }
-
     public void extractLatestValidInput(){
-        int start = -1;
-        int end = 0;
-        boolean isLatest = false;
-        while(!isLatest){
-            start = indexOf(input, '#', end)+1;
-            end = indexOf(input, '~', start);
-            if(!containsValidMessage(end))
-                isLatest = true;
-        }
+        int start = lastIndexOf(input, (byte) '#');
+
         validatedInput = new byte[INPUT_SIZE];
-        for(int i = 0; i < INPUT_SIZE; i++)
-            validatedInput[i] = input[start+i];
+        String inp = "";
+        for(int i = 0; i < INPUT_SIZE; i++) {
+            validatedInput[i] = input[start + i];
+            inp += validatedInput[i]+ " ";
+        }
+        Log.i("NetworkDataController", inp);
     }
 
     public NetworkDataController(BluetoothDevice device){
